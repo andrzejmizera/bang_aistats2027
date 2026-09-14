@@ -36,6 +36,8 @@ def kernel_converge_async_one_random(
 ):
     idx = cuda.grid(1)
 
+    print("Running async_one_random ...")
+
     steps = gpu_steps[0]
     stateSize = gpu_stateSize[0]
 
