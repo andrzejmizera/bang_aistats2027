@@ -30,5 +30,5 @@ def update_initial_state(
 
         if save_history:
             gpu_stateHistory[
-                (step + 1) * gpu_threadNum[0] + relative_index + node_index
+                (step + 1) * gpu_threadNum[0] * relative_index + node_index
             ] = initialStateCopy[node_index]
