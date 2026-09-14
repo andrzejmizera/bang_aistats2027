@@ -41,6 +41,7 @@ def kernel_converge_async_one_random(
 
     # initialStateCopy = cuda.local.array(shape=(10,), dtype=nb.uint32)
     initialState = cuda.local.array(shape=(MAX_STATE_SIZE,), dtype=nb.uint32)
+    initialStateCopy = cuda.local.array(shape=(MAX_STATE_SIZE,), dtype=nb.uint32)
 
     relative_index = idx * stateSize
 
@@ -48,6 +49,7 @@ def kernel_converge_async_one_random(
     # stateSize is the number of 32-bit integers needed to represent one state
     for node_index in range(stateSize):
         initialState[node_index] = gpu_initialState[relative_index + node_index]
+        initialStateCopy[node_index] = gpu_initialState[relative_index + node_index]
 
     steps = gpu_steps[0]
 
@@ -84,7 +86,7 @@ def kernel_converge_async_one_random(
                 gpu_cumExtraF,
                 gpu_varF,
                 gpu_powNum,
-                initialState,
+                initialStateCopy,
                 initialState,
             )
 
@@ -96,6 +98,6 @@ def kernel_converge_async_one_random(
             idx,
             step,
             initialState,
-            initialState,
+            initialStateCopy,
             save_history,
         )
