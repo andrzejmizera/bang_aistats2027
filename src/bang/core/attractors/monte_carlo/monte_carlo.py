@@ -10,7 +10,8 @@ if typing.TYPE_CHECKING:
 from bang.core.attractors.monte_carlo.merge_attractors import merge_attractors
 
 
-def monte_carlo(network: "PBN", initial_trajectory_length: int, trajectory_length: int, threshold: float = 0.15):
+def monte_carlo(network: "PBN", initial_trajectory_length: int, trajectory_length: int, threshold: float = 0.15,
+                initial_states: list[list[bool, ], ] | None = None):
     """
     Detect attractors of a BN by monte carlo approach of running multiple trajectories while checking for repeat states in history.
 
@@ -22,15 +23,21 @@ def monte_carlo(network: "PBN", initial_trajectory_length: int, trajectory_lengt
 
     :param threshold: threshold at which we classify a state as a pseudoattractor
     :type threshold: float
+
+    :param initial_states: initial states of the trajectories
+    :type initial_states: list[list[bool, ], ] | None
     """
     assert (
         network._n_parallel < 2**network._n
     ), "Warning! There are more concurrent trajectories than possible states"
 
-    samples = [
-        [random.choice([True, False]) for _ in range(network._n)]
-        for _ in range(network._n_parallel)
-    ]
+    if initial_states is not None:
+        samples = initial_states
+    else:
+        samples = [
+            [random.choice([True, False]) for _ in range(network._n)]
+            for _ in range(network._n_parallel)
+        ]
     network.set_states(states=samples, reset_history=True)
     network.save_history = False
     network.simple_steps(n_steps=initial_trajectory_length)

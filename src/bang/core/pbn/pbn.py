@@ -728,7 +728,8 @@ class PBN:
         return divide_and_counquer_gpu(self)  # type: ignore
 
     def monte_carlo_detect_attractors(
-        self, trajectory_length: int, attractor_length: int, repr="bool", threshold=0.15
+        self, trajectory_length: int, attractor_length: int, repr="bool", threshold=0.15, 
+        initial_states: list[list[bool, ], ] | None = None
     ):
         """
         Detects attractors in the system by running multiple trajectories and checking for repetitions.
@@ -742,13 +743,16 @@ class PBN:
         initial_trajectory_length : int, optional
             Length of trajectory from which we read attractors.
 
+        initial_states : list[list[bool, ], ] | None, optional
+            Initial states of the trajectories
+
         Returns
         -------
         attractor_states : list[list[list[bool]]] or list[list[int]]
             list of attractors where attractors are coded as lists of lists of bools, lists of bools representing the states.
 
         """
-        attractors = monte_carlo(self, trajectory_length, attractor_length, threshold=threshold)
+        attractors = monte_carlo(self, trajectory_length, attractor_length, threshold=threshold, initial_states=initial_states)
 
         if repr == "bool":
             return attractors
