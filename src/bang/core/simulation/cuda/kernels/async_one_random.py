@@ -50,10 +50,6 @@ def kernel_converge_async_one_random(
         # get initial state of the trajectory this thread will simulate
         # stateSize is the number of 32-bit integers needed to represent one state
         for node_index in range(stateSize):
-
-            if relative_index + node_index > 3:
-                print("!!! PROBLEM !!!:", relative_index, idx, node_index)
-
             initialState[node_index] = gpu_initialState[relative_index + node_index]
             initialStateCopy[node_index] = gpu_initialState[relative_index + node_index]
 
