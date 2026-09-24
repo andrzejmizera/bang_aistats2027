@@ -28,6 +28,7 @@ def update_node(
     # choose function to update state of node_indexth node
     # we assume that the cumulative probability is very close to 1
     # and rand is (almost) always smaller than it
+    ### Uncomment the following two lines in the case of PBNs !!!
     # while rand > gpu_cumCij[gpu_cumNf[node_index] + relative_index]:
     #    relative_index += 1
 
