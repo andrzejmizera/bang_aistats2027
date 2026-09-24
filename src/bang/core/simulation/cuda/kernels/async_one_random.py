@@ -69,7 +69,8 @@ def kernel_converge_async_one_random(
 
             if not perturbation:
                 rand = xoroshiro128p_uniform_float32(states, idx)
-                node_index = int(rand * nodeNum)
+                # node_index = int(rand * nodeNum)
+                node_index = min(int(rand * num_nodes), num_nodes - 1)
 
                 index_shift = node_index % 32
                 index_state = node_index // 32
