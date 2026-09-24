@@ -36,72 +36,70 @@ def kernel_converge_async_one_random(
 ):
     idx = cuda.grid(1)
 
-    steps = gpu_steps[0]
-    stateSize = gpu_stateSize[0]
+    if idx < gpu_threadNum:
 
-    # initialStateCopy = cuda.local.array(shape=(10,), dtype=nb.uint32)
-    initialState = cuda.local.array(shape=(MAX_STATE_SIZE,), dtype=nb.uint32)
-    initialStateCopy = cuda.local.array(shape=(MAX_STATE_SIZE,), dtype=nb.uint32)
+        steps = gpu_steps[0]
+        stateSize = gpu_stateSize[0]
 
-    relative_index = idx * stateSize
+        # initialStateCopy = cuda.local.array(shape=(10,), dtype=nb.uint32)
+        initialState = cuda.local.array(shape=(MAX_STATE_SIZE,), dtype=nb.uint32)
+        initialStateCopy = cuda.local.array(shape=(MAX_STATE_SIZE,), dtype=nb.uint32)
 
-    # get initial state of the trajectory this thread will simulate
-    # stateSize is the number of 32-bit integers needed to represent one state
-    for node_index in range(stateSize):
+        relative_index = idx * stateSize
 
-        if relative_index + node_index > 3:
-            print("!!! PROBLEM !!!", idx, relative_index, node_index)
+        # get initial state of the trajectory this thread will simulate
+        # stateSize is the number of 32-bit integers needed to represent one state
+        for node_index in range(stateSize):
+            initialState[node_index] = gpu_initialState[relative_index + node_index]
+            initialStateCopy[node_index] = gpu_initialState[relative_index + node_index]
 
-        initialState[node_index] = gpu_initialState[relative_index + node_index]
-        initialStateCopy[node_index] = gpu_initialState[relative_index + node_index]
+        steps = gpu_steps[0]
 
-    steps = gpu_steps[0]
+        for step in range(steps):
+            perturbation = False
 
-    for step in range(steps):
-        perturbation = False
-
-        perturbation = perform_perturbation(
-            gpu_npLength,
-            gpu_npNode,
-            gpu_perturbation_rate,
-            states,
-            idx,
-            initialState,
-        )
-
-        if not perturbation:
-            rand = xoroshiro128p_uniform_float32(states, idx)
-            node_index = int(rand * nodeNum)
-
-            index_shift = node_index % 32
-            index_state = node_index // 32
-
-            update_node(
-                node_index,
-                index_shift,
-                index_state,
-                rand,
-                gpu_cumCij,
-                gpu_cumNf,
-                gpu_cumNv,
-                gpu_F,
-                gpu_extraFIndex,
-                gpu_extraF,
-                gpu_cumExtraF,
-                gpu_varF,
-                gpu_powNum,
-                initialStateCopy,
+            perturbation = perform_perturbation(
+                gpu_npLength,
+                gpu_npNode,
+                gpu_perturbation_rate,
+                states,
+                idx,
                 initialState,
             )
 
-        update_initial_state(
-            gpu_threadNum,
-            gpu_stateHistory,
-            gpu_initialState,
-            stateSize,
-            idx,
-            step,
-            initialState,
-            initialStateCopy,
-            save_history,
-        )
+            if not perturbation:
+                rand = xoroshiro128p_uniform_float32(states, idx)
+                node_index = int(rand * nodeNum)
+
+                index_shift = node_index % 32
+                index_state = node_index // 32
+
+                update_node(
+                    node_index,
+                    index_shift,
+                    index_state,
+                    rand,
+                    gpu_cumCij,
+                    gpu_cumNf,
+                    gpu_cumNv,
+                    gpu_F,
+                    gpu_extraFIndex,
+                    gpu_extraF,
+                    gpu_cumExtraF,
+                    gpu_varF,
+                    gpu_powNum,
+                    initialStateCopy,
+                    initialState,
+                )
+
+            update_initial_state(
+                gpu_threadNum,
+                gpu_stateHistory,
+                gpu_initialState,
+                stateSize,
+                idx,
+                step,
+                initialState,
+                initialStateCopy,
+                save_history,
+            )
