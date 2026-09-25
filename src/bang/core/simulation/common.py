@@ -1,4 +1,5 @@
 import numba as nb
+import numpy as np
 
 # Maximum state size of 16 means we can hold 32 * 16 = 512 nodes (size of uint32 * MAX_STATE_SIZE)
 MAX_STATE_SIZE = 16
@@ -66,8 +67,18 @@ def update_node(
     #     1 << (node_index - indexState * 32)
     # )
 
-    initialState[indexState] = (initialStateCopy[indexState] & (~(nb.uint32(1) << (node_index - indexState * 32)))) | (
-        (element_f & nb.uint32(1)) << (node_index - indexState * 32)
-    )
+    # Does not work on GPU
+    # initialState[indexState] = (initialStateCopy[indexState] & (~(nb.uint32(1) << (node_index - indexState * 32)))) | (
+    #     (element_f & nb.uint32(1)) << (node_index - indexState * 32)
+    # )
+
+    
+    # Safe implementation for GPU
+    shift = np.uint32(node_index - indexState * 32)
+    mask = np.uint32(1) << shift
+    bit_val = (np.uint32(element_f) & np.uint32(1)) << shift
+
+    # Clear target bit, then set new bit value
+    initialState[indexState] = (initialStateCopy[indexState] & ~mask) | bit_val
 
     index_shift += 1
