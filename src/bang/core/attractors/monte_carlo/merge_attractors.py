@@ -67,6 +67,6 @@ def merge_attractors(data, threshold=0.15):
 
         # attractors.update([node for node in histogram if histogram[node] >= threshold * trajectory_len])
         # Potentially to be condsidered as an addition to the pseudo-attractor identification method:
-        attractors.add(tuple(*data[-1][trajectory]))
+        attractors.add(tuple(data[-1][trajectory]))
 
     return [np.array(x) for x in attractors]
