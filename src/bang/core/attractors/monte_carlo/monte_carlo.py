@@ -39,15 +39,14 @@ def monte_carlo(network: "PBN", initial_trajectory_length: int, trajectory_lengt
             for _ in range(network._n_parallel)
         ]
     network.set_states(states=samples, reset_history=True)
-    network.save_history = False
+    #network.save_history = False
+    network.save_history = True
     network.simple_steps(n_steps=initial_trajectory_length)
 
     # network.save_history = True
     # network.simple_steps(n_steps=trajectory_length)
     # # trajectories = network.history_bool
-    # trajectories = network.history
-
-    trajectories = [network.last_state]
+    trajectories = network.history
 
     attractors = merge_attractors(trajectories, threshold=threshold)
 
