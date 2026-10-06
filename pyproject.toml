@@ -6,13 +6,13 @@ build-backend = "setuptools.build_meta"
 # See https://setuptools.pypa.io/en/latest/userguide/quickstart.html for more project configuration options.
 name = "bang-gpu"
 readme = "README.md"
-version = "0.4.1"
+version = "0.4.5"
 
 authors = [
-    { name = "Mikołaj Czarnecki", email = "mc448206@students.mimuw.edu.pl" },
-    { name = "Jan Jagodziński", email = "jan.jagodzinski@gmail.com" },
-    { name = "Bartłomiej Parapura", email = "b.parapura@student.uw.edu.pl" },
-    { name = "Paweł Zając", email = "pawel.andrzej.zajac@gmail.com" },
+    { name = "", email = "" },
+    { name = "", email = "" },
+    { name = "", email = "" },
+    { name = "", email = "" },
 ]
 
 requires-python = ">=3.10"
@@ -32,9 +32,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/zpp20/bang"
-Repository = "https://github.com/zpp20/bang"
-Changelog = "https://github.com/zpp20/bang/blob/main/CHANGELOG.md"
+Homepage = ""
+Repository = ""
+Changelog = ""
 
 [project.optional-dependencies]
 dev = [

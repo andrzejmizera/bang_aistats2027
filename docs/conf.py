@@ -12,9 +12,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path("..", "src").resolve()))
 
 project = "bang"
-copyright = "2024, Pawel Zajac, Jan Jagodzinski, Bartlomiej Parapura, Mikolaj Czarnecki"
-author = "Pawel Zajac, Jan Jagodzinski, Bartlomiej Parapura, Mikolaj Czarnecki"
-release = "10.12.2024"
+copyright = "anonymised"
+author = "anonymised"
+release = "6.10.2026"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
